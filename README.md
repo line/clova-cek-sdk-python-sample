@@ -9,7 +9,8 @@ The `TurnOn` and `TurnOff` Intents can have Custom Slots with the names `Light` 
 ## Documentation
 
 * [Clova Platform Guide](https://clova-developers.line.me/guide/)
-* [Clova Extension Python SDK](https://line.github.io/clova-cek-sdk-python/)
+* [**STABLE**][docs-stable-url] &mdash; **most recently tagged version of the API documentation.**
+* [**LATEST**][docs-latest-url] &mdash; *in-development version of the API documentation.*
 
 ## How to Setup Environment
 #### Install pip:
