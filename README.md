@@ -5,13 +5,12 @@ For this example the Custom Extension in the Clova-Developers Center has been se
 `TurnOn`, `TurnOff`, `HomeStatus`, `PlayASound`  
 The `TurnOn` and `TurnOff` Intents can have Custom Slots with the names `Light` or `AirConditioner`.
 
-
 ## Documentation
 
 * [Clova Platform Guide](https://clova-developers.line.me/guide/)
-* [**STABLE**][docs-stable-url] &mdash; **most recently tagged version of the API documentation.**
-* [**LATEST**][docs-latest-url] &mdash; *in-development version of the API documentation.*
+* [Clova CEK SDK Python API](https://clova-cek-sdk-python.readthedocs.io/)
 
+## Installation
 ## How to Setup Environment
 #### Install pip:
 ```
