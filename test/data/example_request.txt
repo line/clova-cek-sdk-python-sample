@@ -1,0 +1,38 @@
+{
+  "version": "1.0",
+  "session": {
+    "sessionId": "value-of-session-id",
+    "user": {
+      "userId": "value-of-user-id",
+      "accessToken": "value-of-access-token"
+    },
+    "new": true
+  },
+  "context": {
+    "System": {
+      "user": {
+        "userId": "my-user-id",
+        "accessToken": "value-of-access-token"
+      },
+      "device": {
+        "deviceId": "value-of-device-id",
+        "display": {
+          "size": "l100",
+          "orientation": "landscape",
+          "dpi": 96,
+          "contentLayer": {
+            "width": 640,
+            "height": 360
+          }
+        }
+      }
+    }
+  },
+  "request": {
+    "type": "IntentRequest",
+    "intent": {
+      "name": "Clova.GuideIntent",
+      "slots": null
+    }
+  }
+}
