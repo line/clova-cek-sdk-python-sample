@@ -40,6 +40,7 @@ def my_service():
     response.headers['Content-Type'] = 'application/json;charset-UTF-8'
     return response
 
+
 @clova.handle.launch
 def launch_request_handler(clova_request):
 
