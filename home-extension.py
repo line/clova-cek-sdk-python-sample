@@ -105,7 +105,7 @@ def turn_on_handler(clova_request):
 
 
 @clova.handle.intent("TurnOff")
-def turn_on_handler(clova_request):
+def turn_off_handler(clova_request):
     home_state = user_home_state.get(clova_request.user_id, HomeState())
     device_name = None
     if 'Light' in clova_request.slots_dict():
