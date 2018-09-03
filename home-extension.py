@@ -12,8 +12,10 @@ logger = logging.getLogger('home_clova_extension')
 
 # Set the default language, currently 'en', 'ja' and 'ko' are supported
 # Turn on the debug mode only for development.
-# Debug_mode will turn off validation of application_id and request verification
-clova = cek.Clova(application_id="my.application.id", default_language="en", debug_mode=True)
+# Debug_mode will turn off validation of application_id
+# and request verification
+clova = cek.Clova(
+    application_id="my.application.id", default_language="en", debug_mode=True)
 
 
 class HomeState(object):
@@ -24,7 +26,8 @@ class HomeState(object):
         self.refrigerator = ["beer", "sausage"]
 
 
-# In this example we use a dictionary with keys as user_ids to keep track of the home states of different users
+# In this example we use a dictionary with keys as user_ids
+# to keep track of the home states of different users
 user_home_state = dict()
 
 
@@ -32,13 +35,15 @@ user_home_state = dict()
 def my_service():
 
     # Forward the request to the Clova Request Handler
-    # Just pass in the binary request body and the request header as a dictionary
+    # Just pass in the binary request body and the request header
+    # as a dictionary
     body_dict = clova.route(body=request.data, header=request.headers)
 
     response = jsonify(body_dict)
     # make sure we have correct Content-Type that CEK expects
     response.headers['Content-Type'] = 'application/json;charset-UTF-8'
     return response
+
 
 @clova.handle.launch
 def launch_request_handler(clova_request):
@@ -47,7 +52,9 @@ def launch_request_handler(clova_request):
     welcome_japanese = cek.Message(message="ようこそ!", language="ja")
     welcome_korean = cek.Message(message="환영!", language="ko")
 
-    response = clova.response(["Welcome~~!", welcome_japanese, welcome_korean, "How can i help you?"])
+    response = clova.response([
+        "Welcome~~!", welcome_japanese, welcome_korean, "How can i help you?"
+    ])
     return response
 
 
@@ -65,11 +72,14 @@ def home_status_handler(clova_request):
     else:
         light_state = "Light is turned off. "
 
-    temperature = "Current room temperature is about {} degrees. ".format(home_state.currentTemperature)
-    refrigerator = "Refrigerator contains {}. ".format(" and ".join(home_state.refrigerator))
+    temperature = "Current room temperature is about {} degrees. ".format(
+        home_state.currentTemperature)
+    refrigerator = "Refrigerator contains {}. ".format(" and ".join(
+        home_state.refrigerator))
     message = aircon_state + light_state + temperature + refrigerator
 
-    message_set = cek.MessageSet(brief="Home is in good condition!", verbose=message)
+    message_set = cek.MessageSet(
+        brief="Home is in good condition!", verbose=message)
     response = clova.response(message_set)
     return response
 
@@ -96,16 +106,19 @@ def turn_on_handler(clova_request):
 
     user_home_state[clova_request.user_id] = home_state
     if not device_name:
-        return clova.response("Sorry, I could not understand. What do you want to turn on?")
+        return clova.response(
+            "Sorry, I could not understand. What do you want to turn on?")
     else:
         response_text = "{} turned on.".format(device_name)
         logger.info(response_text)
-        response = clova.response(message=response_text, reprompt="Do you want to switch on something else?")
+        response = clova.response(
+            message=response_text,
+            reprompt="Do you want to switch on something else?")
         return response
 
 
 @clova.handle.intent("TurnOff")
-def turn_on_handler(clova_request):
+def turn_off_handler(clova_request):
     home_state = user_home_state.get(clova_request.user_id, HomeState())
     device_name = None
     if 'Light' in clova_request.slots_dict():
@@ -118,7 +131,8 @@ def turn_on_handler(clova_request):
 
     user_home_state[clova_request.user_id] = home_state
     if not device_name:
-        return clova.response("Sorry, I could not understand. What do you want to turn off?")
+        return clova.response(
+            "Sorry, I could not understand. What do you want to turn off?")
     else:
         response_text = "{} turned off.".format(device_name)
         logger.info(response_text)
@@ -130,8 +144,11 @@ def turn_on_handler(clova_request):
 def guide_intent(clova_request):
     attributes = clova_request.session_attributes
 
-    # The session_attributes in the current response will become the session_attributes in the next request
-    message = "I can switch things on and off. I can give you a status of your home and i can play dog music to entertain your pets!"
+    # The session_attributes in the current response will become
+    # the session_attributes in the next request
+    message = ("I can switch things on and off."
+               "I can give you a status of your home and "
+               "I can play dog music to entertain your pets!")
     if 'HasExplainedService' in attributes:
         message = "I just explained you what i can do!"
 
@@ -161,7 +178,8 @@ def end_handler(clova_request):
     logger.info("Session ended.")
 
 
-# In case not all intents have been implemented the handler falls back to the default handler
+# In case not all intents have been implemented
+# the handler falls back to the default handler
 @clova.handle.default
 def default_handler(request):
     return clova.response("Sorry I don't understand! Could you please repeat?")
