@@ -1,2 +1,2 @@
 flask
-clova-cek-sdk
+clova-cek-sdk==1.1.0

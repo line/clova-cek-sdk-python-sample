@@ -61,7 +61,7 @@ def launch_request_handler(clova_request):
 @clova.handle.intent("HomeStatus")
 def home_status_handler(clova_request):
 
-    home_state = user_home_state.get(clova_request.user_id, HomeState())
+    home_state = user_home_state.get(clova_request.context.user.id, HomeState())
     if home_state.is_aircon_on:
         aircon_state = "Air conditioner is turned on. "
     else:
@@ -74,7 +74,7 @@ def home_status_handler(clova_request):
 
     temperature = "Current room temperature is about {} degrees. ".format(
         home_state.currentTemperature)
-    refrigerator = "Refrigerator contains {}. ".format(" and ".join(
+    refrigerator = "Your refrigerator contains {}. ".format(" and ".join(
         home_state.refrigerator))
     message = aircon_state + light_state + temperature + refrigerator
 
@@ -87,24 +87,26 @@ def home_status_handler(clova_request):
 @clova.handle.intent("PlayASound")
 def play_a_sound_handler(clova_request):
     # To play an audio file provide an url
-    sound_url = cek.URL("https://www.dog-song-archive/DogSong.mp3")
+    sound_url = cek.URL("http://soundbible.com/grab.php?id=2215&type=mp3")
     response = clova.response(["This is for all dogs in the home.", sound_url])
     return response
 
 
 @clova.handle.intent("TurnOn")
 def turn_on_handler(clova_request):
-    home_state = user_home_state.get(clova_request.user_id, HomeState())
+    user_id = clova_request.context.user.id
+    slots = clova_request.slots
+    home_state = user_home_state.get(user_id, HomeState())
     device_name = None
-    if 'Light' in clova_request.slots_dict():
+    if 'Light' in slots:
         device_name = 'Light'
         home_state.is_light_on = True
-    if 'AirConditioner' in clova_request.slots_dict():
+    if 'AirConditioner' in slots:
         device_name = 'AirConditioner'
         home_state.is_aircon_on = True
         home_state.currentTemperature = 20
 
-    user_home_state[clova_request.user_id] = home_state
+    user_home_state[user_id] = home_state
     if not device_name:
         return clova.response(
             "Sorry, I could not understand. What do you want to turn on?")
@@ -119,17 +121,19 @@ def turn_on_handler(clova_request):
 
 @clova.handle.intent("TurnOff")
 def turn_off_handler(clova_request):
-    home_state = user_home_state.get(clova_request.user_id, HomeState())
+    user_id = clova_request.context.user.id
+    slots = clova_request.slots
+    home_state = user_home_state.get(user_id, HomeState())
     device_name = None
-    if 'Light' in clova_request.slots_dict():
+    if 'Light' in slots:
         device_name = 'Light'
         home_state.is_light_on = False
-    if 'AirConditioner' in clova_request.slots_dict():
+    if 'AirConditioner' in slots:
         device_name = 'Air Conditioner'
         home_state.is_aircon_on = False
         home_state.currentTemperature = 30
 
-    user_home_state[clova_request.user_id] = home_state
+    user_home_state[user_id] = home_state
     if not device_name:
         return clova.response(
             "Sorry, I could not understand. What do you want to turn off?")
@@ -142,7 +146,7 @@ def turn_off_handler(clova_request):
 # Handles Build in Intents
 @clova.handle.intent("Clova.GuideIntent")
 def guide_intent(clova_request):
-    attributes = clova_request.session_attributes
+    attributes = clova_request.session.attributes
 
     # The session_attributes in the current response will become
     # the session_attributes in the next request
